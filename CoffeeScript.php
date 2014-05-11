@@ -4,6 +4,9 @@ namespace samsonos\coffeescript;
 use samson\core\ExternalModule;
 use samson\resourcerouter;
 
+/** Load CoffeeScript parser manually */
+require 'src/CoffeeScript/Init.php';
+
 /**
  * Class for loading module into SamsonPHP
  *
@@ -28,11 +31,14 @@ class CoffeeScript extends ExternalModule
             // Read coffee file
             $coffee = file_get_contents($file);
 
-            // Read updated .coffee resource file and compile it
-            $js = CoffeeScript\Compiler::compile($coffee, array('filename' => $file));
+            // Initialize coffee compiler
+            \CoffeeScript\Init::load();
 
-			// Write to the same place
-			file_put_contents($file, $js);
+            // Read updated .coffee resource file and compile it
+            $js = \CoffeeScript\Compiler::compile($coffee, array('filename' => $file));
+
+			// Read other collected javascript file and write compiled coffee code to the same place
+			file_put_contents($rr->cached['js'], file_get_contents($rr->cached['js']).$js);
 		}
 		catch( Exception $e){ e('Ошибка обработки CoffeeScript: '.$e->getMessage()); }
 		

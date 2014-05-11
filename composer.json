@@ -1,7 +1,7 @@
 {
-    "name": "coffeescript/coffeescript",
+    "name": "samsonos/php_coffeescript",
     "type": "library",
-    "description": "A port of the CoffeeScript compiler to PHP.",
+    "description": "A port of the CoffeeScript compiler to PHP for SamsonPHP",
     "keywords": ["coffee", "coffeescript", "js", "javascript"],
     "homepage": "http://github.com/alxlit/coffeescript-php",
     "license": "MIT",
@@ -10,10 +10,13 @@
             "name": "Alex Little",
             "email": "alxlit@gmail.com",
             "homepage": "http://alxlit.name"
-        }
+        },
+        { "name": "Vitaly Iegorov", "email": "egorov@samsonos.com"}
     ],
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=5.3.0",
+        "samsonos/php_core" : "*",
+        "samsonos/php_resourcer": "*"
     },
     "autoload": {
         "psr-0": {

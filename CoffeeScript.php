@@ -21,12 +21,12 @@ class CoffeeScript extends ExternalModule
 	
 	/**	@see ModuleConnector::init() */
 	public function init(array $params = array())
-	{	
-		// Pointer to resourcerouter			
-		$rr = m('resourcer');
-
+	{
         // If we have coffee resource in project
         if (isset($rr->cached['coffee'])) {
+
+            // Pointer to resourcerouter
+            $rr = m('resourcer');
 
             // Change coffee file to js and store it as current js resource
             $newJS = str_replace('.coffee', '.js', $rr->cached['coffee']);
@@ -49,9 +49,9 @@ class CoffeeScript extends ExternalModule
             }
             catch( Exception $e){ e('Ошибка обработки CoffeeScript: '.$e->getMessage()); }
 
-            // If regular JS has been updated
+            // If regular JS has been updated or coffee script has been updated
             if (isset($rr->updated['js']) || isset($rr->updated['coffee'])) {
-                // Concatenate regular js and compiled coffee script js to a new file
+                // Concatenate regular js and compiled coffee script js to a new javascript file
                 file_put_contents($newJS, file_get_contents($rr->cached['js']).file_get_contents($rr->cached['coffee']));
             }
 

@@ -25,22 +25,33 @@ class CoffeeScript extends ExternalModule
 		// Pointer to resourcerouter			
 		$rr = m('resourcer');
 
-		// If .coffee resource has been updated
-        $file = & $rr->updated['coffee'];
-		if (isset($file)) try {
-            // Read coffee file
-            $coffee = file_get_contents($file);
+        // If we have coffee resource in project
+        if (isset($rr->cached['coffee'])) {
 
-            // Initialize coffee compiler
-            \CoffeeScript\Init::load();
+            // Change coffee file to js and store it as current js resource
+            $newJS = str_replace('.coffee', '.js', $rr->cached['coffee']);
 
-            // Read updated .coffee resource file and compile it
-            $js = \CoffeeScript\Compiler::compile($coffee, array('filename' => $file));
+            // If .coffee resource has been updated
+            $file = & $rr->updated['coffee'];
+            if (isset($file)) try {
 
-			// Read other collected javascript file and write compiled coffee code to the same place
-			file_put_contents($rr->cached['js'], file_get_contents($rr->cached['js']).$js);
-		}
-		catch( Exception $e){ e('Ошибка обработки CoffeeScript: '.$e->getMessage()); }
+                // Read coffee file
+                $coffee = file_get_contents($file);
+
+                // Initialize coffee compiler
+                \CoffeeScript\Init::load();
+
+                // Read updated .coffee resource file and compile it
+                $js = \CoffeeScript\Compiler::compile($coffee, array('filename' => $file));
+
+                // Read other collected javascript file and write compiled coffee code to the same place
+                file_put_contents($newJS, file_get_contents($rr->cached['js']).$js);
+            }
+            catch( Exception $e){ e('Ошибка обработки CoffeeScript: '.$e->getMessage()); }
+
+            // Change old js resource to new one
+            $rr->cached['js'] = $newJS;
+        }
 		
 		// Call parent method
 		parent::init($params);

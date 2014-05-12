@@ -44,10 +44,16 @@ class CoffeeScript extends ExternalModule
                 // Read updated .coffee resource file and compile it
                 $js = \CoffeeScript\Compiler::compile($coffee, array('filename' => $file));
 
-                // Read other collected javascript file and write compiled coffee code to the same place
-                file_put_contents($newJS, file_get_contents($rr->cached['js']).$js);
+                // Compile coffee script to js and save to the same location
+                file_put_contents($file, $js);
             }
             catch( Exception $e){ e('Ошибка обработки CoffeeScript: '.$e->getMessage()); }
+
+            // If regular JS has been updated
+            if (isset($rr->updated['js']) || isset($rr->updated['coffee'])) {
+                // Concatenate regular js and compiled coffee script js to a new file
+                file_put_contents($newJS, file_get_contents($rr->cached['js']).file_get_contents($rr->cached['coffee']));
+            }
 
             // Change old js resource to new one
             $rr->cached['js'] = $newJS;

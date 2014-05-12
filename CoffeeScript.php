@@ -22,11 +22,11 @@ class CoffeeScript extends ExternalModule
 	/**	@see ModuleConnector::init() */
 	public function init(array $params = array())
 	{
+        // Pointer to resourcerouter
+        $rr = m('resourcer');
+
         // If we have coffee resource in project
         if (isset($rr->cached['coffee'])) {
-
-            // Pointer to resourcerouter
-            $rr = m('resourcer');
 
             // Change coffee file to js and store it as current js resource
             $newJS = str_replace('.coffee', '.js', $rr->cached['coffee']);

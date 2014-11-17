@@ -29,7 +29,7 @@ class CoffeeScript extends ExternalModule
         if (isset($rr->cached['coffee'])) {
 
             // Change coffee file to js and store it as current js resource
-            $newJS = str_replace('.coffee', '.js', $rr->cached['coffee']);
+            $newJS = str_replace('.coffee', '.js', str_replace(__SAMSON_PUBLIC_PATH, '', $rr->cached['coffee']));
 
             // If .coffee resource has been updated
             $file = & $rr->updated['coffee'];
@@ -51,12 +51,18 @@ class CoffeeScript extends ExternalModule
 
             // If regular JS has been updated or coffee script has been updated
             if (isset($rr->updated['js']) || isset($rr->updated['coffee'])) {
+                // Read gathered js
+                $oldJS = file_get_contents(str_replace(__SAMSON_PUBLIC_PATH, '', $rr->cached['js']));
+
+                // Read gathered coffee
+                $coffee = file_get_contents(str_replace(__SAMSON_PUBLIC_PATH, '', $rr->cached['coffee']));
+
                 // Concatenate regular js and compiled coffee script js to a new javascript file
-                file_put_contents($newJS, file_get_contents($rr->cached['js']).file_get_contents($rr->cached['coffee']));
+                file_put_contents($newJS, $oldJS.$coffee);
             }
 
             // Change old js resource to new one
-            $rr->cached['js'] = $newJS;
+            //$rr->cached['js'] = $newJS;
         }
 		
 		// Call parent method
